@@ -16,7 +16,7 @@ from folium import plugins
 # In[75]:
 
 
-filename=u'宁波移动开通站点0917.xlsx'
+filename=u'dataset.xlsx'
 
 dataset = pd.read_excel(filename,encoding="gbk")
 dataset = dataset[['基站名','经度','纬度']]
