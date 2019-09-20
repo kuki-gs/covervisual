@@ -157,7 +157,7 @@ class covervisual(object):
         return self.basemap._repr_html_()
             
             
-if __name__ == 'main':
+if __name__ == '__main__':
     
     filename=u'工参_yy.xlsx'
     dataset = pd.read_excel(filename,encoding="gbk")
