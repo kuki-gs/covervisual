@@ -11,7 +11,7 @@ class covervisual(object):
                                 tiles='http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}',
                                 attr='&copy; <a href="http://ditu.amap.com/">高德地图</a>')
         self.basemap.add_child(folium.LatLngPopup())
-        self.basemap.add_child(folium.LayerControl())
+        #self.basemap.add_child(folium.LayerControl())
     
     def get_convexhull(self,point_list):
     
@@ -80,34 +80,47 @@ class covervisual(object):
         y_pred = [-1 if i not in cluster_dict else cluster_dict[i] for i in range(dataset.shape[0])]
         return y_pred    
         
-    def plotpoint(self,point,radius=100,color='#3388ff'):
-        self.basemap.add_child(folium.Circle(point,radius,color,opacity=0,fill=True,fill_opacity=0.6))
+    def plotpoint(self,point,radius=100,color='#3388ff',fg=None):
+        if fg==None:
+            self.basemap.add_child(folium.Circle(point,radius,color,opacity=0,fill=True,fill_opacity=0.6))
+        else:
+            folium.Circle(point,radius,color,opacity=0,fill=True,fill_opacity=0.6).add_to(fg)
     
-    def plotpoints(self,list_point,radius=100,color='#3388ff'):
+    def plotpoints(self,list_point,radius=100,color='#3388ff',fg=None):
         for point in list_point: 
-            self.plotpoint(point,radius,color)
+            self.plotpoint(point,radius,color,fg)
             
-    def plotpoints_df(self,dataset,radius=100,color='#3388ff'):
+            
+    def plotpoints_df(self,dataset,radius=100,color='#3388ff',name='sites'):
+        fg_sites = folium.FeatureGroup(name=name, show=False)
+        fg_sites.add_to(self.basemap)
+        #self.basemap.add_child(fg_sites)
         list_point = dataset[['纬度','经度']].values.tolist()
-        self.plotpoints(list_point,radius,color)
+        self.plotpoints(list_point,radius,color,fg_sites)
+
             
-    def plotpolygon(self,poly,color='red'):
+    def plotpolygon(self,poly,color='red',fg=None):
         if len(poly)<3:
             return
         if poly[0]!=poly[-1]:
             poly = poly + [poly[0]]
-        self.basemap.add_child(folium.PolyLine(locations=poly,color=color))
+        if fg==None:
+            self.basemap.add_child(folium.PolyLine(locations=poly,color=color))
+        else:
+            folium.PolyLine(locations=poly,color=color).add_to(fg)
         
     def plotmarker(self,point,color='red',popup=''):
         self.basemap.add_child(folium.PolyLine(locations=list_point,color=color))
         self.basemap.add_child(folium.Marker(point,color,popup))
         
-    def plotconvexhull(self,list_point,color='red'):
+    def plotconvexhull(self,list_point,color='red',fg=None):
         ch = self.get_convexhull(list_point)
         if ch!=None:
-            self.plotpolygon(ch,color)
+            self.plotpolygon(ch,color,fg)
         
-    def plotdbscan(self,dataset,color='red',e=0.008, Minpts=6):
+    def plotdbscan(self,dataset,color='red',e=0.008, Minpts=6,name='dbscan'):
+        fg_dbscan = folium.FeatureGroup(name=name, show=True)
+        self.basemap.add_child(fg_dbscan)
         y_pred = self.DBSCAN(dataset, e, Minpts)
         #print(max(y_pred))
         dataset = pd.concat([dataset, pd.DataFrame(y_pred, columns=['cluster'])],axis=1)        
@@ -117,7 +130,8 @@ class covervisual(object):
             list_point = data_cluster[['纬度','经度']].values.tolist()
             #self.plotpoints(list_point,radius=10,color='#3388ff')
             if cluster!=-1:
-                self.plotconvexhull(list_point,color)
+                self.plotconvexhull(list_point,color,fg_dbscan)
+
                 
     '''
     point:[纬度，经度]
@@ -143,18 +157,26 @@ class covervisual(object):
         sector = sector + [sector[0]]
         return sector
     
-    def plotcells_df(self,dataset,color='#3388ff'):
+    def plotcells_df(self,dataset,color='#3388ff',name='cells'):
+        fg_cells = folium.FeatureGroup(name=name, show=True)
+        self.basemap.add_child(fg_cells)
         for index,row in dataset.iterrows():
             point = [row['纬度'],row['经度']]
             direction = row['方位角']
             sector = self.cell2sector(point=point, direction=direction, radius=0.5, HPBW=50)
-            self.plotpolygon(sector,color)
-            
+            self.plotpolygon(sector,color,fg_cells)
+
+    def show_layercontrol(self):
+        self.basemap.add_child(folium.LayerControl())
+        
     def save(self,filename='cell.html'):
         self.basemap.save(filename)
         
     def __str__(self):
         return self.basemap._repr_html_()
+            
+  
+
             
             
 if __name__ == '__main__':
@@ -169,4 +191,6 @@ if __name__ == '__main__':
     cv.plotpoints_df(sites,radius=100,color='#3388ff')
     cv.plotcells_df(cells,color='#3388ff')
     cv.plotdbscan(sites,color='red',e=0.008, Minpts=2)
+    cv.show_layercontrol()
     cv.save()
+    print(cv)
