@@ -21,9 +21,9 @@ sites = cells.drop_duplicates(subset=['eNBID'],keep='first').reset_index().drop(
 
 预处理后：
 
-![1568966228581](C:\Users\kuki\Desktop\1.png)
+![1568966228581](https://github.com/kuki-gs/covervisual/blob/master/1.png)
 
-![1568966259413](C:\Users\kuki\Desktop\2.png)
+![1568966259413](https://github.com/kuki-gs/covervisual/blob/master/2.png)
 
 ###2.2 初始化
 
@@ -40,7 +40,7 @@ cv.plotpoints_df(sites,radius=300,color='#3388ff')
 cv.basemap
 ```
 
-![1568966555891](C:\Users\kuki\Desktop\3.png)
+![1568966555891](https://github.com/kuki-gs/covervisual/blob/master/3.png)
 
 ### 2.4 画扇区
 
@@ -49,7 +49,7 @@ cv.plotcells_df(cells,color='#3388ff')
 cv.basemap
 ```
 
-![1568966620678](C:\Users\kuki\Desktop\4.png)
+![1568966620678](https://github.com/kuki-gs/covervisual/blob/master/4.png)
 
 ### 2.5 画覆盖包络
 
@@ -58,7 +58,7 @@ cv.plotdbscan(sites,color='red',e=0.008, Minpts=2)
 cv.basemap
 ```
 
-![1568966662262](C:\Users\kuki\Desktop\5.png)
+![1568966662262](https://github.com/kuki-gs/covervisual/blob/master/5.png)
 
 ### 2.6 保存页面
 
@@ -72,4 +72,4 @@ cv.save('XXX.html')
 str(cv)
 ```
 
-![1568966803536](C:\Users\kuki\Desktop\6.png)
+![1568966803536](https://github.com/kuki-gs/covervisual/blob/master/6.png)
