@@ -60,13 +60,21 @@ cv.basemap
 
 ![1568966662262](https://github.com/kuki-gs/covervisual/blob/master/5.png)
 
-### 2.6 保存页面
+### 2.6 图层控制
+```python
+cv.show_layercontrol()
+cv.basemap
+```
+
+![1568966662262](https://github.com/kuki-gs/covervisual/blob/master/7.png)
+
+### 2.7 保存页面
 
 ```python
 cv.save('XXX.html')
 ```
 
-### 2.7 tostring
+### 2.8 tostring
 
 ```python
 str(cv)
