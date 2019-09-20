@@ -6,7 +6,7 @@
 画基站，画扇区，画覆盖包络。
 
 ## 2，用例
-###2.1 数据初始化
+### 2.1 数据初始化
 
 工参数据至少需要包含['ECI','eNBID','跟踪区','经度','纬度','频段','方位角']信息。
 
@@ -25,7 +25,7 @@ sites = cells.drop_duplicates(subset=['eNBID'],keep='first').reset_index().drop(
 
 ![1568966259413](https://github.com/kuki-gs/covervisual/blob/master/2.png)
 
-###2.2 初始化
+### 2.2 初始化
 
 给一个初始经纬度。
 
